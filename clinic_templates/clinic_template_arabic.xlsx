@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Patients">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">معرّف_المريض</Data></Cell>
+        <Cell><Data ss:Type="String">الاسم_الأول</Data></Cell>
+        <Cell><Data ss:Type="String">الاسم_الأخير</Data></Cell>
+        <Cell><Data ss:Type="String">تاريخ_الميلاد</Data></Cell>
+        <Cell><Data ss:Type="String">الجنس</Data></Cell>
+        <Cell><Data ss:Type="String">الهاتف</Data></Cell>
+        <Cell><Data ss:Type="String">البريد_الإلكتروني</Data></Cell>
+        <Cell><Data ss:Type="String">العنوان</Data></Cell>
+        <Cell><Data ss:Type="String">التاريخ_الطبي</Data></Cell>
+        <Cell><Data ss:Type="String">الحساسية</Data></Cell>
+        <Cell><Data ss:Type="String">الطبيب_المعالج</Data></Cell>
+        <Cell><Data ss:Type="String">تاريخ_الإضافة</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">P-001</Data></Cell>
+        <Cell><Data ss:Type="String">مروة</Data></Cell>
+        <Cell><Data ss:Type="String">أحمد</Data></Cell>
+        <Cell><Data ss:Type="String">1985-03-12</Data></Cell>
+        <Cell><Data ss:Type="String">أنثى</Data></Cell>
+        <Cell><Data ss:Type="String">0123456789</Data></Cell>
+        <Cell><Data ss:Type="String">marwa@example.com</Data></Cell>
+        <Cell><Data ss:Type="String">القاهرة</Data></Cell>
+        <Cell><Data ss:Type="String">سكري</Data></Cell>
+        <Cell><Data ss:Type="String">بنزيلين</Data></Cell>
+        <Cell><Data ss:Type="String">د. علي</Data></Cell>
+        <Cell><Data ss:Type="String">2026-06-28</Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Appointments">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">معرّف_الموعد</Data></Cell>
+        <Cell><Data ss:Type="String">معرّف_المريض</Data></Cell>
+        <Cell><Data ss:Type="String">اسم_المريض</Data></Cell>
+        <Cell><Data ss:Type="String">التاريخ</Data></Cell>
+        <Cell><Data ss:Type="String">الوقت</Data></Cell>
+        <Cell><Data ss:Type="String">مدة_بالدقائق</Data></Cell>
+        <Cell><Data ss:Type="String">الطبيب</Data></Cell>
+        <Cell><Data ss:Type="String">السبب</Data></Cell>
+        <Cell><Data ss:Type="String">الحالة</Data></Cell>
+        <Cell><Data ss:Type="String">الرسوم</Data></Cell>
+        <Cell><Data ss:Type="String">تاريخ_الإضافة</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">A-001</Data></Cell>
+        <Cell><Data ss:Type="String">P-001</Data></Cell>
+        <Cell><Data ss:Type="String">مروة أحمد</Data></Cell>
+        <Cell><Data ss:Type="String">2026-07-01</Data></Cell>
+        <Cell><Data ss:Type="String">09:30</Data></Cell>
+        <Cell><Data ss:Type="Number">30</Data></Cell>
+        <Cell><Data ss:Type="String">د. علي</Data></Cell>
+        <Cell><Data ss:Type="String">فحص دوري</Data></Cell>
+        <Cell><Data ss:Type="String">مجدول</Data></Cell>
+        <Cell><Data ss:Type="Number">200</Data></Cell>
+        <Cell><Data ss:Type="String">2026-06-28</Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Billing">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">معرّف_الفاتورة</Data></Cell>
+        <Cell><Data ss:Type="String">معرّف_الموعد</Data></Cell>
+        <Cell><Data ss:Type="String">معرّف_المريض</Data></Cell>
+        <Cell><Data ss:Type="String">اسم_المريض</Data></Cell>
+        <Cell><Data ss:Type="String">التاريخ</Data></Cell>
+        <Cell><Data ss:Type="String">المبلغ</Data></Cell>
+        <Cell><Data ss:Type="String">مدفوع</Data></Cell>
+        <Cell><Data ss:Type="String">طريقة_الدفع</Data></Cell>
+        <Cell><Data ss:Type="String">ملاحظات</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">INV-001</Data></Cell>
+        <Cell><Data ss:Type="String">A-001</Data></Cell>
+        <Cell><Data ss:Type="String">P-001</Data></Cell>
+        <Cell><Data ss:Type="String">مروة أحمد</Data></Cell>
+        <Cell><Data ss:Type="String">2026-07-01</Data></Cell>
+        <Cell><Data ss:Type="Number">200</Data></Cell>
+        <Cell><Data ss:Type="String">لا</Data></Cell>
+        <Cell><Data ss:Type="String">نقداً</Data></Cell>
+        <Cell><Data ss:Type="String"></Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Inventory">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">معرّف_الصنف</Data></Cell>
+        <Cell><Data ss:Type="String">اسم_الصنف</Data></Cell>
+        <Cell><Data ss:Type="String">الفئة</Data></Cell>
+        <Cell><Data ss:Type="String">الكمية</Data></Cell>
+        <Cell><Data ss:Type="String">حد_إعادة_الطلب</Data></Cell>
+        <Cell><Data ss:Type="String">سعر_الوحدة</Data></Cell>
+        <Cell><Data ss:Type="String">القيمة_الإجمالية</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">I-001</Data></Cell>
+        <Cell><Data ss:Type="String">باراسيتامول 500mg</Data></Cell>
+        <Cell><Data ss:Type="String">دواء</Data></Cell>
+        <Cell><Data ss:Type="Number">50</Data></Cell>
+        <Cell><Data ss:Type="Number">20</Data></Cell>
+        <Cell><Data ss:Type="Number">1.5</Data></Cell>
+        <Cell><Data ss:Type="Number">75</Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Staff">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">معرّف_الموظف</Data></Cell>
+        <Cell><Data ss:Type="String">الاسم</Data></Cell>
+        <Cell><Data ss:Type="String">الدور</Data></Cell>
+        <Cell><Data ss:Type="String">الهاتف</Data></Cell>
+        <Cell><Data ss:Type="String">البريد_الإلكتروني</Data></Cell>
+        <Cell><Data ss:Type="String">ساعات_العمل</Data></Cell>
+        <Cell><Data ss:Type="String">ملاحظات</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">S-001</Data></Cell>
+        <Cell><Data ss:Type="String">د. علي</Data></Cell>
+        <Cell><Data ss:Type="String">طبيب</Data></Cell>
+        <Cell><Data ss:Type="String">0100000000</Data></Cell>
+        <Cell><Data ss:Type="String">ali@example.com</Data></Cell>
+        <Cell><Data ss:Type="String">09:00-15:00</Data></Cell>
+        <Cell><Data ss:Type="String"></Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Dashboard">
+    <Table>
+      <Row><Cell><Data ss:Type="String">لوحة تحكم - مقاييس مقترحة</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">عدد مواعيد اليوم (صيغة إرشادية):</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">=COUNTIFS(Appointments!R[0]C[3]:R[1000]C[3],TODAY(),Appointments!R[0]C[8]:R[1000]C[8],"مجدول")</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">إيراد هذا الشهر (إرشادي):</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">=SUMIFS(Billing!R[0]C[5]:R[1000]C[5],Billing!R[0]C[4]:R[1000]C[4],">=" & EOMONTH(TODAY(),-1)+1,Billing!R[0]C[4]:R[1000]C[4],"<=" & EOMONTH(TODAY(),0))</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">إجمالي المتأخرات (إرشادي):</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">=SUMIFS(Billing!R[0]C[5]:R[1000]C[5],Billing!R[0]C[6]:R[1000]C[6],"لا")</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">ملاحظات:</Data></Cell></Row>
+      <Row><Cell><Data ss:Type="String">- بعد فتح الملف في Excel يمكنك تعديل الصيغ بالشكل المباشر باستخدام مراجع الأعمدة التقليدية مثل A:B أو استخدام INDEX/MATCH.</Data></Cell></Row>
+    </Table>
+  </Worksheet>
+</Workbook>
