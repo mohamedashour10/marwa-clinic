@@ -26,5 +26,14 @@ services:
       - ./:/app
     restart: unless-stopped
 
+  pgloader:
+    image: dimitri/pgloader:latest
+    volumes:
+      - ./:/data
+    entrypoint: ["pgloader", "/data/pgloader.load"]
+    depends_on:
+      - db
+    restart: 'no'
+
 volumes:
   pgdata:
