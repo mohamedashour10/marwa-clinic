@@ -1,0 +1,2 @@
+InvoiceID,AppointmentID,PatientID,PatientName,Date,Amount,Paid,PaymentMethod,Notes
+INV-001,A-001,P-001,"Marwa Ahmed",2026-07-01,200,No,Cash,

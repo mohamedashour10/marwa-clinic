@@ -1,0 +1,2 @@
+AppointmentID,PatientID,PatientName,Date,Time,DurationMins,Doctor,Reason,Status,Fee,CreatedDate
+A-001,P-001,"Marwa Ahmed",2026-07-01,09:30,30,Dr. Ali,Checkup,Scheduled,200,2026-06-28
