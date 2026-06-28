@@ -1,0 +1,66 @@
+  - name: Wait for Postgres
+    run: |
+      echo "Waiting for Postgres to be ready..."
+      for i in {1..20}; do
+        if pg_isready -h localhost -p 5432 -U postgres -d clinic_db; then
+          echo "Postgres is ready"
+          break
+        fi
+        sleep 3
+      done
+    env:
+      PGPASSWORD: postgres
+
+  - name: Set up Python
+    uses: actions/setup-python@v4
+    with:
+      python-version: '3.11'
+
+  - name: Install system deps
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y sqlite3 libpq-dev postgresql-client
+
+  - name: Install Python deps
+    run: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+      pip install sqlalchemy psycopg2-binary python-dateutil
+
+  - name: Run Flask DB upgrade (create tables)
+    run: |
+      flask db upgrade
+    env:
+      DATABASE_URL: ${{ env.DATABASE_URL }}
+      FLASK_APP: app.py
+
+  - name: Run Python migration script
+    run: |
+      python tools/migrate_sqlite_to_pg.py
+    env:
+      SQLITE_URL: sqlite:///clinic.db
+      DATABASE_URL: ${{ env.DATABASE_URL }}
+
+  - name: Show counts in Postgres
+    run: |
+      echo "Tables:"
+      psql -h localhost -U postgres -d clinic_db -c "\dt"
+      echo "Count samples:"
+      psql -h localhost -U postgres -d clinic_db -c "SELECT 'patients' as table, count(*) FROM patient;" || true
+      psql -h localhost -U postgres -d clinic_db -c "SELECT 'doctors' as table, count(*) FROM doctor;" || true
+      psql -h localhost -U postgres -d clinic_db -c "SELECT 'appointments' as table, count(*) FROM appointment;" || true
+    env:
+      PGPASSWORD: postgres
+
+  - name: Dump Postgres database
+    run: |
+      pg_dump -h localhost -U postgres -d clinic_db -F c -f clinic_db.dump
+    env:
+      PGPASSWORD: postgres
+
+  - name: Upload DB dump
+    uses: actions/upload-artifact@v4
+    with:
+      name: clinic_db_dump
+      path: clinic_db.dump
+    
