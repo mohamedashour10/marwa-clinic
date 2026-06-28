@@ -6,7 +6,16 @@ import os
 from functools import wraps
 
 from models import db, Patient, Doctor, Appointment, User
+from forms import LoginForm, UserForm, PatientForm, AppointmentForm
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
+
+def parse_dt(s):
+    # Expecting format: YYYY-MM-DD HH:MM
+    try:
+        return datetime.strptime(s, "%Y-%m-%d %H:%M")
+    except Exception:
+        return None
 
 
 def create_app():
@@ -43,9 +52,12 @@ def create_app():
             return wrapped
         return decorator
 
+    @app.context_processor
+    def inject_user():
+        return dict(current_user=current_user)
+
     @app.route('/')
     def index():
-        # إذا المستخدم مسجل دخول نوجّه لصفحة المرضى وإلا نعرض الصفحة الرئيسية
         if current_user.is_authenticated:
             return redirect(url_for('patients_list'))
         return render_template('index.html')
@@ -53,16 +65,17 @@ def create_app():
     # Authentication
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-        if request.method == 'POST':
-            username = request.form.get('username')
-            password = request.form.get('password')
+        form = LoginForm()
+        if form.validate_on_submit():
+            username = form.username.data
+            password = form.password.data
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
                 login_user(user)
                 flash('تم تسجيل الدخول بنجاح')
                 return redirect(request.args.get('next') or url_for('index'))
             flash('اسم المستخدم أو كلمة المرور غير صحيح')
-        return render_template('auth/login.html')
+        return render_template('auth/login.html', form=form)
 
     @app.route('/logout')
     @login_required
@@ -70,6 +83,58 @@ def create_app():
         logout_user()
         flash('تم تسجيل الخروج')
         return redirect(url_for('index'))
+
+    # Admin: Users management
+    @app.route('/admin/users')
+    @login_required
+    @role_required('admin')
+    def admin_users():
+        users = User.query.order_by(User.id.desc()).all()
+        return render_template('admin/users.html', users=users)
+
+    @app.route('/admin/users/new', methods=['GET', 'POST'])
+    @login_required
+    @role_required('admin')
+    def admin_users_new():
+        form = UserForm()
+        if form.validate_on_submit():
+            u = User(username=form.username.data, role=form.role.data)
+            if form.password.data:
+                u.set_password(form.password.data)
+            db.session.add(u)
+            db.session.commit()
+            flash('تم إضافة المستخدم')
+            return redirect(url_for('admin_users'))
+        return render_template('admin/user_form.html', form=form, user=None)
+
+    @app.route('/admin/users/<int:user_id>/edit', methods=['GET', 'POST'])
+    @login_required
+    @role_required('admin')
+    def admin_users_edit(user_id):
+        user = User.query.get_or_404(user_id)
+        form = UserForm(obj=user)
+        if form.validate_on_submit():
+            user.username = form.username.data
+            user.role = form.role.data
+            if form.password.data:
+                user.set_password(form.password.data)
+            db.session.commit()
+            flash('تم تحديث المستخدم')
+            return redirect(url_for('admin_users'))
+        return render_template('admin/user_form.html', form=form, user=user)
+
+    @app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+    @login_required
+    @role_required('admin')
+    def admin_users_delete(user_id):
+        user = User.query.get_or_404(user_id)
+        if user.username == 'admin':
+            flash('لا يمكن حذف المستخدم الافتراضي')
+            return redirect(url_for('admin_users'))
+        db.session.delete(user)
+        db.session.commit()
+        flash('تم حذف المستخدم')
+        return redirect(url_for('admin_users'))
 
     # Patients
     @app.route('/patients')
@@ -81,31 +146,39 @@ def create_app():
     @app.route('/patients/new', methods=['GET', 'POST'])
     @login_required
     def patients_new():
-        if request.method == 'POST':
-            name = request.form.get('full_name')
-            phone = request.form.get('phone')
-            dob = request.form.get('dob') or None
-            notes = request.form.get('notes')
-            p = Patient(full_name=name, phone=phone, dob=dob, notes=notes)
+        form = PatientForm()
+        if form.validate_on_submit():
+            dob = None
+            if form.dob.data:
+                try:
+                    dob = datetime.strptime(form.dob.data, '%Y-%m-%d').date()
+                except Exception:
+                    dob = None
+            p = Patient(full_name=form.full_name.data, phone=form.phone.data, dob=dob, notes=form.notes.data)
             db.session.add(p)
             db.session.commit()
             flash('تم إضافة المريض بنجاح')
             return redirect(url_for('patients_list'))
-        return render_template('patients/form.html', patient=None)
+        return render_template('patients/form.html', form=form, patient=None)
 
     @app.route('/patients/<int:patient_id>/edit', methods=['GET', 'POST'])
     @login_required
     def patients_edit(patient_id):
         patient = Patient.query.get_or_404(patient_id)
-        if request.method == 'POST':
-            patient.full_name = request.form.get('full_name')
-            patient.phone = request.form.get('phone')
-            patient.dob = request.form.get('dob') or None
-            patient.notes = request.form.get('notes')
+        form = PatientForm(obj=patient)
+        if form.validate_on_submit():
+            patient.full_name = form.full_name.data
+            patient.phone = form.phone.data
+            if form.dob.data:
+                try:
+                    patient.dob = datetime.strptime(form.dob.data, '%Y-%m-%d').date()
+                except Exception:
+                    pass
+            patient.notes = form.notes.data
             db.session.commit()
             flash('تم تحديث بيانات المريض')
             return redirect(url_for('patients_list'))
-        return render_template('patients/form.html', patient=patient)
+        return render_template('patients/form.html', form=form, patient=patient)
 
     # Doctors
     @app.route('/doctors')
@@ -124,20 +197,30 @@ def create_app():
     @app.route('/appointments/new', methods=['GET','POST'])
     @login_required
     def appointments_new():
-        doctors = Doctor.query.all()
-        patients = Patient.query.all()
-        if request.method == 'POST':
-            patient_id = request.form.get('patient_id')
-            doctor_id = request.form.get('doctor_id')
-            start = request.form.get('start_datetime')
-            end = request.form.get('end_datetime') or start
-            reason = request.form.get('reason')
-            ap = Appointment(patient_id=patient_id, doctor_id=doctor_id, start_datetime=start, end_datetime=end, reason=reason)
+        form = AppointmentForm()
+        form.patient_id.choices = [(p.id, p.full_name) for p in Patient.query.order_by(Patient.full_name).all()]
+        form.doctor_id.choices = [(d.id, d.name) for d in Doctor.query.order_by(Doctor.name).all()]
+        if form.validate_on_submit():
+            start = parse_dt(form.start_datetime.data)
+            end = parse_dt(form.end_datetime.data) if form.end_datetime.data else start
+            if not start:
+                flash('صيغة التاريخ/الوقت غير صحيحة، الرجاء استخدام YYYY-MM-DD HH:MM')
+                return render_template('appointments/form.html', form=form)
+            # conflict check: same doctor, overlapping times
+            conflict = Appointment.query.filter(
+                Appointment.doctor_id == form.doctor_id.data,
+                Appointment.start_datetime < end,
+                Appointment.end_datetime > start
+            ).first()
+            if conflict:
+                flash('يوجد موعد متداخل لنفس الطبيب في هذا التوقيت')
+                return render_template('appointments/form.html', form=form)
+            ap = Appointment(patient_id=form.patient_id.data, doctor_id=form.doctor_id.data, start_datetime=start, end_datetime=end, reason=form.reason.data)
             db.session.add(ap)
             db.session.commit()
             flash('تم إضافة الموعد')
             return redirect(url_for('appointments_list'))
-        return render_template('appointments/form.html', doctors=doctors, patients=patients)
+        return render_template('appointments/form.html', form=form)
 
     return app
 
