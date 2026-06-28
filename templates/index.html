@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="text-center py-5">
+    <h1>مرحبًا في نظام إدارة عيادة مروة</h1>
+    <p class="lead">ابدأ بإضافة المرضى، الأطباء، وجدولة المواعيد.</p>
+    <a href="{{ url_for('patients_list') }}" class="btn btn-primary mx-1">المرضى</a>
+    <a href="{{ url_for('doctors_list') }}" class="btn btn-secondary mx-1">الأطباء</a>
+    <a href="{{ url_for('appointments_list') }}" class="btn btn-success mx-1">المواعيد</a>
+  </div>
+{% endblock %}
